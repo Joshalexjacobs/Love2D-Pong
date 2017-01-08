@@ -1,30 +1,66 @@
 --ball.lua
 
-ball = {
+local ball = {
+  type = "ball",
   x = 0,
   y = 0,
   dx = 0,
   dy = 0,
-  r = 7.5,
+  w = 5,
+  h = 5,
   angle = math.pi, -- will be randomly generated at the start of each round
   speed = 500,
+  filter = function(item, other)
+    if other.type == "player" or other.type == "wall" then
+      return 'bounce'
+    end
+  end
 }
 
 function loadBall()
   -- place ball in the middle of our playing field
-  ball.x, ball.y = love.graphics.getWidth() / 2, love.graphics.getHeight() / 2
+  ball.x, ball.y = windowWidth / 2, windowHeight / 2
+
+  -- generate random angle on load and convert to rads
+  ball.angle = (math.pi/180) * love.math.random(1, 360)
+
+  -- add the ball to our world
+  world:add(ball, ball.x, ball.y, ball.w, ball.h)
+end
+
+local function bounceBall(item, other)
+  if item.y > other.y and item.y < other.y + other.h then -- vertical hit
+    ball.angle = - ball.angle
+  elseif item.x > other.x and item.x < other.x + other.w then -- horizontal hit
+    ball.angle = - ball.angle + math.pi
+  end
 end
 
 function updateBall(dt)
-  -- update ball's dx and dy variables
-  ball.dx = ball.speed * dt
-  ball.dy = ball.speed * dt
+  local cols, len = 0, 0
 
-  -- move our ball depending on it's current angle
-  ball.x = ball.x + math.sin(ball.angle) * ball.dx
-  ball.y = ball.y - math.cos(ball.angle) * ball.dy
+  -- update ball's dx and dy variables using it's speed and trajectory
+  ball.dx = (ball.speed * dt) * math.sin(ball.angle)
+  ball.dy = (ball.speed * dt) * math.cos(ball.angle)
+
+  -- reset ball if it leaves the screen on the left or right
+  if ball.x > windowWidth then
+    ball.angle = (math.pi/180) * love.math.random(1, 360)
+    ball.x, ball.y = windowWidth / 2, windowHeight / 2
+  elseif ball.x < 0 then
+    ball.angle = (math.pi/180) * love.math.random(1, 360)
+    ball.x, ball.y = windowWidth / 2, windowHeight / 2
+  end
+
+  ball.x, ball.y, cols, len = world:move(ball, ball.x + ball.dx, ball.y + ball.dy, ball.filter)
+
+  for i = 1, len do
+    if cols[i].other.type == "wall" or cols[i].other.type == "player" then
+      bounceBall(cols[i].itemRect, cols[i].otherRect)
+    end
+  end
 end
 
 function drawBall()
-  love.graphics.circle("line", ball.x, ball.y, ball.r)
+  love.graphics.rectangle("fill", ball.x, ball.y, ball.w, ball.h)
 end

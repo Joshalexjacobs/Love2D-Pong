@@ -1,25 +1,10 @@
 --game.lua
 
-game = {}
+game = {} -- initialize the gamestate "game"
 
+require "walls"
 require "ball"
-
-pOne = {
-  x = 25,
-  y = 50,
-  w = 25,
-  h = 75,
-  dx = 0, -- probs wont be needed
-  dy = 0,
-  speed = 5,
-  draw = function()
-    love.graphics.rectangle("line", pOne.x, pOne.y, pOne.w, pOne.h)
-  end,
-}
-
-pTwo = {
-
-}
+require "player"
 
 -- handles key press events
 function game:keypressed(key, code)
@@ -33,11 +18,19 @@ function game:enter()
   -- set line width
   love.graphics.setLineWidth(0.5)
 
+  -- load Walls
+  loadWalls()
+
+  -- load players
+  loadPlayers()
+
+  -- load our ball
   loadBall()
 end
 
 function game:update(dt)
   -- update things
+  updatePlayers(dt)
   updateBall(dt)
 end
 
@@ -47,9 +40,11 @@ function game:draw()
   -- our middle line
   love.graphics.line(love.graphics.getWidth() / 2, 0, love.graphics.getWidth() / 2, love.graphics.getHeight())
 
+  -- draw walls
+  drawWalls()
+
   -- draw player paddles
-  pOne.draw()
-  --pTwo.draw()
+  drawPlayers()
 
   -- draw ball
   drawBall()

@@ -1,11 +1,13 @@
 -- main.lua
 
 Gamestate = require "lib/Gamestate"
+local bump = require "lib/bump"
 require "math"
 
+require "states/menu"
 require "states/game"
 
--- global copy function (we may or may not need this, although i use this function a lot in love)
+-- global copy function
 function copy(obj, seen)
   if type(obj) ~= 'table' then return obj end
   if seen and seen[obj] then return seen[obj] end
@@ -16,15 +18,25 @@ function copy(obj, seen)
   return res
 end
 
+-- some global variables
+windowWidth = nil
+windowHeight = nil
+world = bump.newWorld() -- create a world with bump
+
 function love.load(arg)
   math.randomseed(os.time()) -- seed love.math.rand() using os time
   love.graphics.setDefaultFilter("nearest", "nearest") -- set nearest pixel distance
 
-  -- 192x160 (closest atari2600 resolution i could find)
   love.window.setMode(576, 480, {resizable=false, vsync=true, msaa=0}) -- set the window mode
+  windowWidth = love.graphics.getWidth()
+  windowHeight = love.graphics.getHeight()
 
-
+  -- load fonts
+  smallFont = love.graphics.newFont("lib/kenpixel_mini.ttf", 14)
+  medFont = love.graphics.newFont("lib/kenpixel_mini.ttf", 25)
+  bigFont = love.graphics.newFont("lib/kenpixel_mini.ttf", 100)
+  love.graphics.setFont(bigFont)
 
   Gamestate.registerEvents() -- prep Gamestate
-  Gamestate.switch(game) -- swtich to game screen
+  Gamestate.switch(menu) -- swtich to the main menu screenl
 end
