@@ -2,6 +2,8 @@
 
 game = {}
 
+require "ball"
+
 pOne = {
   x = 25,
   y = 50,
@@ -19,16 +21,6 @@ pTwo = {
 
 }
 
-ball = {
-  x = 0,
-  y = 0,
-  r = 10,
-  speed = 5,
-  draw = function()
-    love.graphics.circle("line", ball.x, ball.y, ball.r)
-  end
-}
-
 -- handles key press events
 function game:keypressed(key, code)
   if key == "escape" then
@@ -41,12 +33,12 @@ function game:enter()
   -- set line width
   love.graphics.setLineWidth(0.5)
 
-  -- place ball in the middle of our playing field
-  ball.x, ball.y = love.graphics.getWidth() / 2, love.graphics.getHeight() / 2
+  loadBall()
 end
 
 function game:update(dt)
   -- update things
+  updateBall(dt)
 end
 
 function game:draw()
@@ -60,5 +52,5 @@ function game:draw()
   --pTwo.draw()
 
   -- draw ball
-  ball.draw(l)
+  drawBall()
 end

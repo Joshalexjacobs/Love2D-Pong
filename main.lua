@@ -1,6 +1,7 @@
 -- main.lua
 
 Gamestate = require "lib/Gamestate"
+require "math"
 
 require "states/game"
 
