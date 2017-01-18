@@ -28,8 +28,10 @@ function love.load(arg)
   love.graphics.setDefaultFilter("nearest", "nearest") -- set nearest pixel distance
 
   love.window.setMode(576, 480, {resizable=false, vsync=true, msaa=0}) -- set the window mode
-  windowWidth = love.graphics.getWidth()
-  windowHeight = love.graphics.getHeight()
+  --windowWidth = love.graphics.getWidth()
+  --windowHeight = love.graphics.getHeight()
+  windowWidth = 576
+  windowHeight = 480
 
   -- load fonts
   smallFont = love.graphics.newFont("lib/kenpixel_mini.ttf", 14)

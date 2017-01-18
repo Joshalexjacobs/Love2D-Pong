@@ -9,7 +9,9 @@ local ball = {
   w = 5,
   h = 5,
   angle = math.pi, -- will be randomly generated at the start of each round
-  speed = 500,
+  minSpeed = 200,
+  speed = 200, -- current speed
+  maxSpeed = 450,
   filter = function(item, other)
     if other.type == "player" or other.type == "wall" then
       return 'bounce'
@@ -34,6 +36,10 @@ local function bounceBall(item, other)
   elseif item.x > other.x and item.x < other.x + other.w then -- horizontal hit
     ball.angle = - ball.angle + math.pi
   end
+
+  if ball.speed <= ball.maxSpeed then
+    ball.speed = ball.speed + (ball.speed * 0.1)
+  end
 end
 
 function updateBall(dt)
@@ -47,9 +53,11 @@ function updateBall(dt)
   if ball.x > windowWidth then
     ball.angle = (math.pi/180) * love.math.random(1, 360)
     ball.x, ball.y = windowWidth / 2, windowHeight / 2
+    ball.speed = ball.minSpeed
   elseif ball.x < 0 then
     ball.angle = (math.pi/180) * love.math.random(1, 360)
     ball.x, ball.y = windowWidth / 2, windowHeight / 2
+    ball.speed = ball.minSpeed
   end
 
   ball.x, ball.y, cols, len = world:move(ball, ball.x + ball.dx, ball.y + ball.dy, ball.filter)

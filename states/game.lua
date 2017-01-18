@@ -30,6 +30,7 @@ end
 
 function game:update(dt)
   -- update things
+  updateWalls()
   updatePlayers(dt)
   updateBall(dt)
 end
