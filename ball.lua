@@ -1,6 +1,6 @@
 --ball.lua
 
-local ball = {
+ball = {
   type = "ball",
   x = 0,
   y = 0,
@@ -11,7 +11,7 @@ local ball = {
   angle = math.pi, -- will be randomly generated at the start of each round
   minSpeed = 200,
   speed = 200, -- current speed
-  maxSpeed = 450,
+  maxSpeed = 1000, -- wild
   filter = function(item, other)
     if other.type == "player" or other.type == "wall" then
       return 'bounce'
@@ -38,7 +38,7 @@ local function bounceBall(item, other)
   end
 
   if ball.speed <= ball.maxSpeed then
-    ball.speed = ball.speed + (ball.speed * 0.1)
+    ball.speed = ball.speed + (ball.speed * 0.05)
   end
 end
 

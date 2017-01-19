@@ -10,6 +10,8 @@ local pOne = {
   dx = 0, -- probs wont be needed
   dy = 0,
   speed = 30,
+  up = "w",
+  down = "s",
   filter = function(item, other)
     if other.type == "wall" then
       return 'slide'
@@ -19,7 +21,7 @@ local pOne = {
 
 local pTwo = {
   type = "player",
-  ai = false,
+  ai = true,
   x = 576 - 50,
   y = 200,
   w = 25,
@@ -27,6 +29,8 @@ local pTwo = {
   dx = 0, -- probs wont be needed
   dy = 0,
   speed = 30,
+  up = "up",
+  down = "down",
   filter = function(item, other)
     if other.type == "wall" then
       return 'slide'
@@ -39,42 +43,54 @@ function loadPlayers()
   world:add(pTwo, pTwo.x, pTwo.y, pTwo.w, pTwo.h)
 end
 
-function updatePlayers(dt)
-  local cols, len = 0, 0
-
-
-  if pOne.ai == false then
-    -- handle player one movement
-    if love.keyboard.isDown("w") and pOne.y > 0 then
-      if pOne.dy > 0 then pOne.dy = 0 end -- for quick turning around
-      pOne.dy = pOne.dy - pOne.speed * dt
-    elseif love.keyboard.isDown("s") and pOne.y + pOne.h < windowHeight then
-      if pOne.dy < 0 then pOne.dy = 0 end
-      pOne.dy = pOne.dy + pOne.speed * dt
-    else -- paddle deceleration
-      if pOne.dy > 0 then
-        pOne.dy = math.max((pOne.dy - 100 * dt), 0)
-      elseif pOne.dy < 0 then
-        pOne.dy = math.min((pOne.dy + 100 * dt), 0)
+local function paddleAI(player, dt) -- for now lets assume its the paddle on the right
+  if ball.dx > 0 then -- if ball is moving towards paddle
+    -- follow the ball, until it turns around or passes the player
+    if ball.y < player.y + (player.h / 2) + 10 then -- up
+      if player.dy > 0 then player.dy = 0 end
+      player.dy = player.dy - player.speed * dt
+    elseif ball.y > player.y - (player.h / 2) then -- down
+      if player.dy < 0 then player.dy = 0 end
+      player.dy = player.dy + player.speed * dt
+    else
+      if player.dy > 0 then
+        player.dy = math.max((player.dy - 100 * dt), 0)
+      elseif player.dy < 0 then
+        player.dy = math.min((player.dy + 100 * dt), 0)
       end
     end
   end
 
-  if pOne.ai == false then
-    -- handle player two movement
-    if love.keyboard.isDown("up") and pTwo.y > 0 then
-      if pTwo.dy > 0 then pTwo.dy = 0 end -- for quick turning around
-      pTwo.dy = pTwo.dy - pTwo.speed * dt
-    elseif love.keyboard.isDown("down") and pTwo.y + pTwo.h < windowHeight then
-      if pTwo.dy < 0 then pTwo.dy = 0 end
-      pTwo.dy = pTwo.dy + pTwo.speed * dt
-    else
-      if pTwo.dy > 0 then
-        pTwo.dy = math.max((pTwo.dy - 50 * dt), 0)
-      elseif pTwo.dy < 0 then
-        pTwo.dy = math.min((pTwo.dy + 50 * dt), 0)
-      end
+end
+
+local function updatePlayer(player, dt)
+  -- handle player movement
+  if love.keyboard.isDown(player.up) and player.y > 0 then
+    if player.dy > 0 then player.dy = 0 end -- for quick turning around
+    player.dy = player.dy - player.speed * dt
+  elseif love.keyboard.isDown(player.down) and player.y + player.h < windowHeight then
+    if player.dy < 0 then player.dy = 0 end
+    player.dy = player.dy + player.speed * dt
+  else -- paddle deceleration
+    if player.dy > 0 then
+      player.dy = math.max((player.dy - 100 * dt), 0)
+    elseif player.dy < 0 then
+      player.dy = math.min((player.dy + 100 * dt), 0)
     end
+  end
+end
+
+function updatePlayers(dt)
+  local cols, len = 0, 0
+
+  if pOne.ai == false then
+    updatePlayer(pOne, dt)
+  end
+
+  if pTwo.ai == false then
+    updatePlayer(pTwo, dt)
+  else
+    paddleAI(pTwo, dt)
   end
 
   -- update player positions
