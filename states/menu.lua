@@ -16,7 +16,7 @@ function menu:keypressed(key, code)
   if key == "escape" then
     love.event.quit() -- exit game if player hits the escape key
   elseif key == "space" then
-    Gamestate.switch(game) -- swtich to game screen (we'll make a selection and pass it as a parameter to game later)
+    Gamestate.switch(game, selector.index) -- swtich to game screen (we'll make a selection and pass it as a parameter to game later)
   elseif key == "down" then
     if selector.index ~= 3 then
       selector.index = selector.index + 1

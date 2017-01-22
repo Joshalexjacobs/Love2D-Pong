@@ -2,6 +2,7 @@
 
 local pOne = {
   type = "player",
+  side = "left",
   ai = false, -- is this player computer controlled?
   x = 25,
   y = 200,
@@ -22,7 +23,8 @@ local pOne = {
 
 local pTwo = {
   type = "player",
-  ai = true,
+  side = "right",
+  ai = false,
   x = 576 - 50,
   y = 200,
   w = 25,
@@ -40,34 +42,50 @@ local pTwo = {
   score = 0,
 }
 
-function loadPlayers()
+function loadPlayers(pOneAI, pTwoAI)
+  if pOneAI then pOne.ai = true end
+  if pTwoAI then pTwo.ai = true end
+
   world:add(pOne, pOne.x, pOne.y, pOne.w, pOne.h)
   world:add(pTwo, pTwo.x, pTwo.y, pTwo.w, pTwo.h)
 end
 
-local function paddleAI(player, dt) -- for now lets assume its the paddle on the right
-  if ball.dx > 0 and ball.x > love.graphics.getWidth() / 2 then -- if ball is moving towards paddle and is past the midway point
+local function paddleAIMove(player, dt)
+  if ball.y < player.y + 15 then -- up
+    if player.dy > 0 then player.dy = 0 end
+    player.dy = player.dy - player.speed * dt
+  elseif ball.y > player.y + player.h - 15 then -- down
+    if player.dy < 0 then player.dy = 0 end
+    player.dy = player.dy + player.speed * dt
+  else
+    if player.dy > 0 then
+      player.dy = math.max((player.dy - 25 * dt), 0)
+    elseif player.dy < 0 then
+      player.dy = math.min((player.dy + 25 * dt), 0)
+    end
+  end
+end
 
-    -- follow the ball, until it turns around or passes the player
-    if ball.y < player.y + 15 then -- up
-      if player.dy > 0 then player.dy = 0 end
-      player.dy = player.dy - player.speed * dt
-    elseif ball.y > player.y + player.h - 15 then -- down
-      if player.dy < 0 then player.dy = 0 end
-      player.dy = player.dy + player.speed * dt
-    else
-      if player.dy > 0 then
-        player.dy = math.max((player.dy - 25 * dt), 0)
-      elseif player.dy < 0 then
-        player.dy = math.min((player.dy + 25 * dt), 0)
+local function paddleAI(player, dt) -- for now lets assume its the paddle on the right
+  if player.side == "right" then
+    if ball.dx > 0 then --and ball.x > love.graphics.getWidth() / 2 then -- if ball is moving towards paddle and is past the midway point
+      paddleAIMove(player, dt) -- follow the ball, until it turns around or passes the player
+    elseif player.y ~= 200 then -- have the paddle move when the balls not on it's side of the court
+      if player.y > 200 then
+        player.dy = player.dy - player.speed/2 * dt
+      elseif player.y < 200 then
+        player.dy = player.dy + player.speed/2 * dt
       end
     end
-
-  elseif player.y ~= 200 then -- have the paddle move when the balls not on it's side of the court
-    if player.y > 200 then
-      player.dy = player.dy - player.speed/2 * dt
-    elseif player.y < 200 then
-      player.dy = player.dy + player.speed/2 * dt
+  else -- player.side is "left"
+    if ball.dx < 0 then -- and ball.x < love.graphics.getWidth() / 2 then
+      paddleAIMove(player, dt)
+    elseif player.y ~= 200 then
+      if player.y > 200 then
+        player.dy = player.dy - player.speed/2 * dt
+      elseif player.y < 200 then
+        player.dy = player.dy + player.speed/2 * dt
+      end
     end
   end
 
@@ -95,6 +113,8 @@ function updatePlayers(dt)
 
   if pOne.ai == false then
     updatePlayer(pOne, dt)
+  else
+    paddleAI(pOne, dt)
   end
 
   if pTwo.ai == false then

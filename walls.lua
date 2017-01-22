@@ -3,7 +3,7 @@
 local topWall = {
   type = "wall",
   name = "topWall",
-  x = 0,
+  x = -5,
   y = 0,
   w = nil,
   h = 2,
@@ -15,7 +15,7 @@ local topWall = {
 local botWall = {
   type = "wall",
   name = "botWall",
-  x = 0,
+  x = -5,
   y = nil,
   w = nil,
   h = 2,
@@ -26,7 +26,7 @@ local botWall = {
 
 
 function loadWalls()
-  topWall.w, botWall.w, botWall.y = windowWidth, windowWidth, windowHeight - 2
+  topWall.w, botWall.w, botWall.y = windowWidth + 10, windowWidth + 10, windowHeight - 2
   world:add(topWall, topWall.x, topWall.y, topWall.w, topWall.h)
   world:add(botWall, botWall.x, botWall.y, botWall.w, botWall.h)
 end

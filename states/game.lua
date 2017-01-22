@@ -14,7 +14,16 @@ function game:keypressed(key, code)
 end
 
 -- upon entering game.lua (similar to love.load())
-function game:enter()
+function game:enter(menu, index)
+  local pOneAI, pTwoAI = false, false
+  if index == 1 then
+    pTwoAI = true
+  elseif index == 3 then
+    pOneAI, pTwoAI = true, true
+  --else -- pOneAI and pTwoAI remain false
+    --print("Player VS Player")
+  end
+
   -- set line width
   love.graphics.setLineWidth(0.5)
 
@@ -22,7 +31,7 @@ function game:enter()
   loadWalls()
 
   -- load players
-  loadPlayers()
+  loadPlayers(pOneAI, pTwoAI)
 
   -- load our ball
   loadBall()
@@ -32,7 +41,12 @@ function game:update(dt)
   -- update things
   updateWalls()
   updatePlayers(dt)
+
   local p1Score, p2Score = updateBall(dt)
+  if p1Score or p2Score then
+    print("p1Score: " .. tostring(p1Score))
+    print("p2Score: " .. tostring(p2Score))
+  end
 
   updateScore(p1Score, p2Score)
 end

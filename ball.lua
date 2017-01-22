@@ -8,10 +8,11 @@ ball = {
   dy = 0,
   w = 5,
   h = 5,
+  scored = false,
   angle = math.pi, -- will be randomly generated at the start of each round
   minSpeed = 200,
   speed = 200, -- current speed
-  maxSpeed = 1000, -- wild
+  maxSpeed = 600,
   filter = function(item, other)
     if other.type == "player" or other.type == "wall" then
       return 'bounce'
@@ -32,9 +33,9 @@ end
 
 local function bounceBall(item, other)
   if item.y > other.y and item.y < other.y + other.h then -- vertical hit
-    ball.angle = - ball.angle
+    ball.angle = - ball.angle + (love.math.random(-7, 7) * 0.01)
   elseif item.x > other.x and item.x < other.x + other.w then -- horizontal hit
-    ball.angle = - ball.angle + math.pi
+    ball.angle = - ball.angle + math.pi + (love.math.random(-7, 7) * 0.01)
   end
 
   if ball.speed <= ball.maxSpeed then
@@ -55,11 +56,13 @@ function updateBall(dt)
     ball.angle = (math.pi/180) * love.math.random(1, 360)
     ball.x, ball.y = windowWidth / 2, windowHeight / 2
     ball.speed = ball.minSpeed
+    ball.dx, ball.dy = 0, 0
     p1Score = true
-  elseif ball.x < 0 then
+  elseif ball.x - ball.w < 0 then
     ball.angle = (math.pi/180) * love.math.random(1, 360)
     ball.x, ball.y = windowWidth / 2, windowHeight / 2
     ball.speed = ball.minSpeed
+    ball.dx, ball.dy = 0, 0
     p2Score = true
   end
 
