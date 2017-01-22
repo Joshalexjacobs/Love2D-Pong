@@ -3,6 +3,7 @@
 Gamestate = require "lib/Gamestate"
 local bump = require "lib/bump"
 require "math"
+require "lib/SimplyTimers"
 
 require "states/menu"
 require "states/game"

@@ -46,8 +46,11 @@ function loadPlayers(pOneAI, pTwoAI)
   if pOneAI then pOne.ai = true end
   if pTwoAI then pTwo.ai = true end
 
-  world:add(pOne, pOne.x, pOne.y, pOne.w, pOne.h)
-  world:add(pTwo, pTwo.x, pTwo.y, pTwo.w, pTwo.h)
+  world:add(pOne, pOne.x + 2, pOne.y + 2, pOne.w - 2, pOne.h - 2)
+  world:add(pTwo, pTwo.x + 2, pTwo.y + 2, pTwo.w - 2, pTwo.h - 2)
+
+  --world:add(pOne, pOne.x, pOne.y, pOne.w, pOne.h)
+  --world:add(pTwo, pTwo.x, pTwo.y, pTwo.w, pTwo.h)
 end
 
 local function paddleAIMove(player, dt)
@@ -152,12 +155,12 @@ end
 
 function drawPlayers()
   -- draw player's score
-  love.graphics.printf(tostring(pOne.score), 7.5, 5, 100)
-  love.graphics.printf(tostring(pTwo.score), love.graphics.getWidth() - 17.5, 5, 100)
+  love.graphics.printf(tostring(pOne.score), 175, 5, 100)
+  love.graphics.printf(tostring(pTwo.score), 385, 5, 100)
 
   -- draw player one
-  love.graphics.rectangle("line", pOne.x, pOne.y, pOne.w, pOne.h)
+  love.graphics.rectangle("fill", pOne.x, pOne.y, pOne.w, pOne.h)
 
   -- draw player two
-  love.graphics.rectangle("line", pTwo.x, pTwo.y, pTwo.w, pTwo.h)
+  love.graphics.rectangle("fill", pTwo.x, pTwo.y, pTwo.w, pTwo.h)
 end
