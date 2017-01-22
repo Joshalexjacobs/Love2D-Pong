@@ -44,6 +44,7 @@ end
 
 function updateBall(dt)
   local cols, len = 0, 0
+  local p1Score, p2Score = false, false
 
   -- update ball's dx and dy variables using it's speed and trajectory
   ball.dx = (ball.speed * dt) * math.sin(ball.angle)
@@ -54,10 +55,12 @@ function updateBall(dt)
     ball.angle = (math.pi/180) * love.math.random(1, 360)
     ball.x, ball.y = windowWidth / 2, windowHeight / 2
     ball.speed = ball.minSpeed
+    p1Score = true
   elseif ball.x < 0 then
     ball.angle = (math.pi/180) * love.math.random(1, 360)
     ball.x, ball.y = windowWidth / 2, windowHeight / 2
     ball.speed = ball.minSpeed
+    p2Score = true
   end
 
   ball.x, ball.y, cols, len = world:move(ball, ball.x + ball.dx, ball.y + ball.dy, ball.filter)
@@ -67,6 +70,8 @@ function updateBall(dt)
       bounceBall(cols[i].itemRect, cols[i].otherRect)
     end
   end
+
+  return p1Score, p2Score
 end
 
 function drawBall()

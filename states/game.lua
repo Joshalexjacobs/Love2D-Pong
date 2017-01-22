@@ -32,12 +32,12 @@ function game:update(dt)
   -- update things
   updateWalls()
   updatePlayers(dt)
-  updateBall(dt)
+  local p1Score, p2Score = updateBall(dt)
+
+  updateScore(p1Score, p2Score)
 end
 
 function game:draw()
-  --love.graphics.printf("Welcome to Pong", 0, 0, love.graphics.getWidth(), "center")
-
   -- our middle line
   love.graphics.line(love.graphics.getWidth() / 2, 0, love.graphics.getWidth() / 2, love.graphics.getHeight())
 
