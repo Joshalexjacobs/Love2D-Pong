@@ -43,10 +43,6 @@ function game:update(dt)
   updatePlayers(dt)
 
   local p1Score, p2Score = updateBall(dt)
-  if p1Score or p2Score then
-    print("p1Score: " .. tostring(p1Score))
-    print("p2Score: " .. tostring(p2Score))
-  end
 
   updateScore(p1Score, p2Score)
 end

@@ -10,7 +10,7 @@ local pOne = {
   h = 75,
   dx = 0, -- probs wont be needed
   dy = 0,
-  speed = 30,
+  speed = 35,
   up = "w",
   down = "s",
   filter = function(item, other)
@@ -18,20 +18,20 @@ local pOne = {
       return 'slide'
     end
   end,
-  score = 0,
+  score = 0
 }
 
 local pTwo = {
   type = "player",
   side = "right",
   ai = false,
-  x = 576 - 50,
+  x = 768 - 50, -- 768 (was 576 - 50)
   y = 200,
   w = 25,
   h = 75,
   dx = 0, -- probs wont be needed
   dy = 0,
-  speed = 30,
+  speed = 35,
   up = "up",
   down = "down",
   filter = function(item, other)
@@ -39,7 +39,7 @@ local pTwo = {
       return 'slide'
     end
   end,
-  score = 0,
+  score = 0
 }
 
 function loadPlayers(pOneAI, pTwoAI)
@@ -54,10 +54,10 @@ function loadPlayers(pOneAI, pTwoAI)
 end
 
 local function paddleAIMove(player, dt)
-  if ball.y < player.y + 15 then -- up
+  if ball.y < player.y + 17 then -- up
     if player.dy > 0 then player.dy = 0 end
     player.dy = player.dy - player.speed * dt
-  elseif ball.y > player.y + player.h - 15 then -- down
+  elseif ball.y > player.y + player.h - 17 then -- down
     if player.dy < 0 then player.dy = 0 end
     player.dy = player.dy + player.speed * dt
   else
@@ -155,8 +155,8 @@ end
 
 function drawPlayers()
   -- draw player's score
-  love.graphics.printf(tostring(pOne.score), 175, 5, 100)
-  love.graphics.printf(tostring(pTwo.score), 385, 5, 100)
+  love.graphics.printf(tostring(pOne.score), 0, 5, windowWidth / 2, "center")
+  love.graphics.printf(tostring(pTwo.score), windowWidth / 2, 5, windowWidth / 2, "center")
 
   -- draw player one
   love.graphics.rectangle("fill", pOne.x, pOne.y, pOne.w, pOne.h)

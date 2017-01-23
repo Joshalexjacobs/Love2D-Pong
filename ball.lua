@@ -12,7 +12,7 @@ ball = {
   angle = math.pi, -- will be randomly generated at the start of each round
   minSpeed = 200,
   speed = 200, -- current speed
-  maxSpeed = 600,
+  maxSpeed = 650,
   filter = function(item, other)
     if other.type == "player" or other.type == "wall" then
       return 'bounce'
@@ -21,12 +21,14 @@ ball = {
   timers = {}
 }
 
+local function setAngle()
+  ball.angle = (math.pi/180) * love.math.random(1, 360)
+end
+
 function loadBall()
   -- place ball in the middle of our playing field
   ball.x, ball.y = windowWidth / 2, windowHeight / 2
-
-  -- generate random angle on load and convert to rads
-  ball.angle = (math.pi/180) * love.math.random(1, 360)
+  setAngle() -- set ball's starting angle
 
   -- add the ball to our world
   world:add(ball, ball.x, ball.y, ball.w, ball.h)
@@ -40,7 +42,7 @@ local function bounceBall(item, other)
   end
 
   if ball.speed <= ball.maxSpeed then
-    ball.speed = ball.speed + (ball.speed * 0.05)
+    ball.speed = ball.speed + (ball.speed * 0.075)
   end
 end
 
@@ -55,14 +57,14 @@ function updateBall(dt)
   -- reset ball if it leaves the screen on the left or right
   if checkTimer("scored", ball.timers) == false then
     if ball.x > windowWidth then
-      ball.angle = (math.pi/180) * love.math.random(1, 360)
+      setAngle()
       ball.x, ball.y = windowWidth / 2, windowHeight / 2
       ball.speed = ball.minSpeed
       ball.dx, ball.dy = 0, 0
       p1Score = true
       addTimer(0.3, "scored", ball.timers)
     elseif ball.x - ball.w < 0 then
-      ball.angle = (math.pi/180) * love.math.random(1, 360)
+      setAngle()
       ball.x, ball.y = windowWidth / 2, windowHeight / 2
       ball.speed = ball.minSpeed
       ball.dx, ball.dy = 0, 0

@@ -28,10 +28,14 @@ function love.load(arg)
   math.randomseed(os.time()) -- seed love.math.rand() using os time
   love.graphics.setDefaultFilter("nearest", "nearest") -- set nearest pixel distance
 
-  love.window.setMode(576, 480, {resizable=false, vsync=true, msaa=0}) -- set the window mode
-  --windowWidth = love.graphics.getWidth()
-  --windowHeight = love.graphics.getHeight()
-  windowWidth = 576
+  -- original aspect ratio:
+  --love.window.setMode(576, 480, {resizable=false, vsync=true, msaa=0}) -- set the window mode
+  --windowWidth = 576
+  --windowHeight = 480
+
+  -- 16:9 aspect ratio:
+  love.window.setMode(768, 480, {resizable=false, vsync=true, msaa=0}) -- set the window mode
+  windowWidth = 768
   windowHeight = 480
 
   -- load fonts
