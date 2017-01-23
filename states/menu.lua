@@ -8,7 +8,7 @@ local selector = {
   w = 0,
   h = 35,
   color = {255, 100, 100, 100},
-  index = 1,
+  index = 3,
 }
 
 -- handles key press events

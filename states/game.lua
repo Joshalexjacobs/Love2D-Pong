@@ -59,4 +59,7 @@ function game:draw()
 
   -- draw ball
   drawBall()
+
+  -- draw fps
+  love.graphics.print(tostring(love.timer.getFPS( )), 0.2, 0.2, 0, 0.75, 0.75) -- print fps in the top left corner of the screen
 end
