@@ -34,6 +34,8 @@ function loadBall()
 
   -- add the ball to our world
   world:add(ball, ball.x, ball.y, ball.w, ball.h)
+
+  addTimer(10.0, "bounce", ball.timers)
 end
 
 local function bounceBall(item, other)
@@ -46,6 +48,8 @@ local function bounceBall(item, other)
   if ball.speed <= ball.maxSpeed then
     ball.speed = ball.speed + (ball.speed * 0.075)
   end
+  
+  resetTimer(10.0, "bounce", ball.timers)
 end
 
 function updateBall(dt)
@@ -100,6 +104,14 @@ function updateBall(dt)
     deleteTimer("scored", ball.timers)
     ball.speed = ball.minSpeed
     world:add(ball, ball.x, ball.y, ball.w, ball.h) -- readd the ball to world
+  end
+
+  if updateTimer(dt, "bounce", ball.timers) == true then
+    setAngle()
+    ball.x, ball.y = windowWidth / 2, windowHeight / 2
+    ball.speed = 0
+    ball.dx, ball.dy = 0, 0
+    resetTimer(10.0, "bounce", ball.timers)
   end
 
   return ball.p1Score, ball.p2Score
